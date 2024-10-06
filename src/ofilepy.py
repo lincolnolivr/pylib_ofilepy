@@ -1,5 +1,5 @@
 # %%
-__version__ = '1.0.2'
+__version__ = '1.1.0'
 
 # %% [markdown]
 # # ofilepath Lib (Moving/Copying/Getting Files Information)
@@ -94,7 +94,7 @@ def get_subfolders(folder_path):
     
     return subfolder
 
-def get_files(folder_path,file_type='',contains=''):
+def get_files(folder_path, file_type='',contains=''):
     files = [str(i) for i in pathlib.Path(folder_path).iterdir() if not i.is_dir() and file_type in str(i) and contains in str(i)]
     
     return files
@@ -119,8 +119,8 @@ def is_file_open(file_path):
     except PermissionError:
         print('file is open, close it and try again')
 
-def get_downloads_folder():
-    downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads')
+def get_downloads_folder(downloads_folder_name='Downloads'):
+    downloads_folder = os.path.join(os.path.expanduser('~'), downloads_folder_name)
     return downloads_folder
 
 def detect_file_download(download_path=None,tries=50,wait=1):
@@ -131,7 +131,7 @@ def detect_file_download(download_path=None,tries=50,wait=1):
         if len(get_files(download_path)) > 0: break
         else: tries_count += 1
 
-def detect_file_download_with_criteria(folder_path: str=None,file_type='',contains='',tries=50,wait=5):
+def detect_file_download_with_criteria(folder_path: str=None,file_type='',contains='',tries=50, wait=5):
     if folder_path is None: folder_path = get_downloads_folder()
 
     def is_file_downloaded():
@@ -228,4 +228,14 @@ def check_file_type(file: str, file_types: tuple[str]):
     """
     return file.lower().endswith(file_types)
 
+def get_local_sharepoint_path(sharepoint_site, raw_adress):
+    sharepoint_local_folder = os.path.expanduser('~/MFP Michelin')
+    if raw_adress.startswith('/'):
+        raw_adress = raw_adress[1:]
+    for folder in os.listdir(sharepoint_local_folder):
+        site = folder.split(' - ')[0]
+        if sharepoint_site == site or sharepoint_site == folder:
+            sharepoint_site_folder = folder
+            break
+    return os.path.join(sharepoint_local_folder, sharepoint_site_folder, raw_adress)
 
