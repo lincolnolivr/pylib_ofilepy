@@ -15,7 +15,7 @@ def get_file_extension(file_path: str):
     file_extension = os.path.splitext(file_path)[1]
     return(file_extension)
 
-def get_file_name(file_path: str,extension=True):
+def get_file_name(file_path: str, extension: bool=True):
     if extension == True:
         file_name = file_path[(len(file_path) - file_path[::-1].find('\\')):]
     else:
@@ -24,7 +24,7 @@ def get_file_name(file_path: str,extension=True):
 
     return file_name
 
-def get_last_file(file_path: str=None,extension=True,file_type='',contains=''):
+def get_last_file(file_path: str=None, extension: bool=True, file_type: str='', contains: str=''):
     if file_path is None: file_path = get_downloads_folder()
     list_of_files = [str(file) for file in pathlib.Path(file_path).iterdir() if not file.is_dir() and str(file).endswith(file_type) and contains in str(file)]
     file_path = max(list_of_files, key=os.path.getctime)
