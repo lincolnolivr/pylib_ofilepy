@@ -5,7 +5,7 @@ with open('README.md', 'r') as file:
  
 setup(
     name='ofilepy',
-    version='1.1.1',
+    version='1.1.2',
     license='MIT License',
     author='Lincoln Oliver',
     long_description=readme,

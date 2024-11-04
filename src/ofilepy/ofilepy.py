@@ -1,5 +1,5 @@
 # %%
-__version__ = '1.1.0'
+__version__ = '1.1.2'
 
 # %% [markdown]
 # # ofilepath Lib (Moving/Copying/Getting Files Information)
@@ -36,7 +36,7 @@ def get_last_file(file_path: str=None, extension: bool=True, file_type: str='', 
         
     return file
 
-def get_last_file_name(file_path=None,extension=True,file_type='',contains=''):
+def get_last_file_name(file_path: str=None, extension: bool=True, file_type: str='', contains: str=''):
     if file_path == None: file_path = get_downloads_folder()
     try:
         list_of_files = [str(file) for file in pathlib.Path(file_path).iterdir() if not file.is_dir() and str(file).endswith(file_type) and contains in str(file)]
@@ -55,7 +55,7 @@ def get_last_file_name(file_path=None,extension=True,file_type='',contains=''):
     except:
         return print('Any file was found!')
     
-def move_the_last_file(old_path,new_path,file_type='',contains='',delete=False):
+def move_the_last_file(old_path:str , new_path:str , file_type:str ='', contains: str='', delete: bool=False):
     list_of_files = [str(i) for i in pathlib.Path(old_path).iterdir() if not i.is_dir() and str(i).endswith(file_type) and contains in str(i)]
     latest_file = max(list_of_files, key=os.path.getctime)
     new_file = latest_file.replace(old_path,new_path)
@@ -73,7 +73,7 @@ def move_the_last_file(old_path,new_path,file_type='',contains='',delete=False):
             os.remove(new_file)
             os.rename(latest_file, new_file)
 
-def rename_file(old_path,new_path,delete=False):
+def rename_file(old_path: str, new_path:str , delete:bool=False):
     if delete == False:
         try: os.rename(old_path, new_path)
         except: print('File already exist!')
@@ -81,7 +81,7 @@ def rename_file(old_path,new_path,delete=False):
         try: os.rename(old_path, new_path)
         except: os.remove(new_path); os.rename(old_path, new_path)
              
-def copy_the_last_file(old_path,new_path,file_type=''):
+def copy_the_last_file(old_path:str, new_path:str, file_type:str=''):
     list_of_files = [str(i) for i in pathlib.Path(old_path).iterdir() if not i.is_dir() and file_type in str(i)]
     lastest_file = max(list_of_files, key=os.path.getctime)
     lastest_file_name = lastest_file[(len(lastest_file) - lastest_file[::-1].find('\\')):]
@@ -89,17 +89,17 @@ def copy_the_last_file(old_path,new_path,file_type=''):
     new_file = lastest_file.replace(old_path,new_path).replace(lastest_file_name,new_file_name)
     shutil.copy(lastest_file,new_file)
     
-def get_subfolders(folder_path):
+def get_subfolders(folder_path: str):
     subfolder = [str(i) for i in pathlib.Path(folder_path).iterdir() if i.is_dir()]
     
     return subfolder
 
-def get_files(folder_path, file_type='',contains=''):
+def get_files(folder_path:str, file_type: str='', contains:str=''):
     files = [str(i) for i in pathlib.Path(folder_path).iterdir() if not i.is_dir() and file_type in str(i) and contains in str(i)]
     
     return files
 
-def get_all_files(folder_path,file_type='',contains='',include_path=True):
+def get_all_files(folder_path: str, file_type: str='', contains:str='', include_path:bool=True):
     filelist = []
 
     for root, dir, files in os.walk(folder_path):
@@ -108,22 +108,21 @@ def get_all_files(folder_path,file_type='',contains='',include_path=True):
                 filelist.append(os.path.join(root,file))
 
             elif str(file).endswith(file_type) and contains in str(file):
-                filelist.append(file)
-                
+                filelist.append(file)      
     return filelist
 
-def is_file_open(file_path):
+def is_file_open(file_path: str):
     try:
         with open(file_path, 'r+') as f:
             print('file is closed, proceed to write')
     except PermissionError:
         print('file is open, close it and try again')
 
-def get_downloads_folder(downloads_folder_name='Downloads'):
+def get_downloads_folder(downloads_folder_name: str='Downloads'):
     downloads_folder = os.path.join(os.path.expanduser('~'), downloads_folder_name)
     return downloads_folder
 
-def detect_file_download(download_path=None,tries=50,wait=1):
+def detect_file_download(download_path: str=None, tries: int=50, wait:float=1):
     if download_path is None: download_path = get_downloads_folder()
     tries_count = 0
     while True and tries_count <= tries:
@@ -131,7 +130,7 @@ def detect_file_download(download_path=None,tries=50,wait=1):
         if len(get_files(download_path)) > 0: break
         else: tries_count += 1
 
-def detect_file_download_with_criteria(folder_path: str=None,file_type='',contains='',tries=50, wait=5):
+def detect_file_download_with_criteria(folder_path: str=None, file_type: str='', contains: str='', tries: int=50, wait: float=5):
     if folder_path is None: folder_path = get_downloads_folder()
 
     def is_file_downloaded():
@@ -147,7 +146,7 @@ def detect_file_download_with_criteria(folder_path: str=None,file_type='',contai
     print('File was not downloaded!')
     return False
 
-def adding_prefix_to_files(file_path: str=None, file_type: str='', contains: str='',prefix: str=''):
+def adding_prefix_to_files(file_path: str=None, file_type: str='', contains: str='', prefix: str=''):
     if file_path is None: file_path = get_downloads_folder()
 
     list_of_files = [str(i) for i in pathlib.Path(file_path).iterdir() if not i.is_dir() and i.endswith(file_type) and contains in str(i)]
@@ -158,7 +157,7 @@ def adding_prefix_to_files(file_path: str=None, file_type: str='', contains: str
         os.rename(file,file_new)
     print('Done!')
 
-def remove_files_by_date(folder_path: str, cutoff_date, comparison, include_subs: bool=False):
+def remove_files_by_date(folder_path: str, cutoff_date: datetime.datetime, comparison: str, include_subs: bool=False):
     for root, directories, files in os.walk(folder_path):
         if not include_subs:
             directories.clear()
@@ -190,7 +189,7 @@ def get_access_date(file_path: str):
     access_date = datetime.datetime.fromtimestamp(timestamp)
     return access_date
 
-def get_file_size(file_path: str,size: str='default'):
+def get_file_size(file_path: str, size: str='default'):
     if size == 'default': file_size = os.path.getsize(file_path)
     elif size == 'kb': file_size = os.path.getsize(file_path) / 1024
     elif size == 'mb': file_size = os.path.getsize(file_path) / (1024 * 1024)
@@ -227,15 +226,3 @@ def check_file_type(file: str, file_types: tuple[str]):
     Check if the file is of a certain type.
     """
     return file.lower().endswith(file_types)
-
-def get_local_sharepoint_path(sharepoint_site, raw_adress):
-    sharepoint_local_folder = os.path.expanduser('~/MFP Michelin')
-    if raw_adress.startswith('/'):
-        raw_adress = raw_adress[1:]
-    for folder in os.listdir(sharepoint_local_folder):
-        site = folder.split(' - ')[0]
-        if sharepoint_site == site or sharepoint_site == folder:
-            sharepoint_site_folder = folder
-            break
-    return os.path.join(sharepoint_local_folder, sharepoint_site_folder, raw_adress)
-
